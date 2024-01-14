@@ -1,4 +1,6 @@
 galaxy_info:
+  role_name: ansible_samba
+  namespace: tychobrouwer
   author: Tycho Brouwer
   description: Install and configure SAMBA for my servers
 

@@ -1,0 +1,36 @@
+---
+- name: Converge
+  hosts: all
+
+  roles:      
+    - role: ansible-samba
+      samba_user: sambauser
+      samba_password: password123
+      samba_share_dir: /share
+      samba_shares:
+        - name: file_share
+          comment: private file share
+          path: /share/file-share
+          writable: yes
+          browsable: yes
+          inherit_permissions: yes
+          force_user: mountuser
+          force_group: mountuser
+
+        - name: media_share
+          comment: private media share
+          path: /share/video-share
+          writable: yes
+          browsable: yes
+          inherit_permissions: yes
+          force_user: mountuser
+          force_group: mountuser
+
+    - role: tychobrouwer.lxc_mount
+      lxc_mount_is_lxc: true
+      lxc_mount_mounts:
+        - { src: /media/file-share, dest: /share/file-share }
+        - { src: /rpool-main/media-share, dest: /share/media-share }
+      lxc_mount_lxc_id: 101
+      lxc_mount_test_mode: true
+      lxc_mount_users: [ "sambauser" ]

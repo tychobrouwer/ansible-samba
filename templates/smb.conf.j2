@@ -164,3 +164,16 @@
 ;   usershare allow guests = yes
 
 #======================= Share Definitions =======================
+
+{% for share in samba_shares %}
+[{{ share.name }}]
+   comment = {{ share.comment }}
+   path = {{ share.path }}
+   writable = {{ share.writable }}
+   browsable = {{ share.browsable }}
+   valid users = {{ samba_user }}
+   inherit permissions = {{ share.inherit_permissions }}
+   force user = {{ share.force_user }}
+   force group = {{ share.force_group }}
+
+{% endfor %}
