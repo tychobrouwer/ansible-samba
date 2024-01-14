@@ -1,0 +1,7 @@
+---
+# vars file for samba-configure
+role_username: sambauser
+role_useruid: 1000
+role_usergid: 1000
+
+role_share_dir: /share

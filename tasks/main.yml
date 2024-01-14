@@ -1,0 +1,64 @@
+---
+# tasks file for samba-configure
+- name: Ensure samba is installed
+  ansible.builtin.package:
+    name:
+      - samba
+    state: present
+
+- name: Ensure smbd service is started and enabled
+  ansible.builtin.service:
+    name: smbd
+    state: started
+    enabled: true
+
+- name: Ensure samba user group exists
+  ansible.builtin.group:
+    name: "{{ role_username }}"
+    gid: "{{ role_usergid }}"
+    state: present
+
+- name: Ensure samba user exists
+  ansible.builtin.user:
+    name: "{{ role_username }}"
+    group: "{{ role_username }}"
+    uid: "{{ useruid }}"
+    create_home: false
+    shell: /usr/sbin/nologin
+    state: present
+
+- name: Ensure share folder exists
+  ansible.builtin.file:
+    path: "{{ role_share_dir }}"
+    state: directory
+    mode: "0775"
+
+- name: Copy smb config to remote
+  ansible.builtin.template:
+    src: ./files/smb.conf
+    dest: /etc/samba/smb.conf
+    mode: "0664"
+  notify: Restart smdb
+
+- name: Create shares in smb config file
+  ansible.builtin.blockinfile:
+    path: /etc/samba/smb.conf
+    marker: "# {mark} ANSIBLE MANAGED BLOCK {{ item.name }}"
+    block: |
+      [{{ item.name }}]
+        comment = {{ item.comment }}
+        path = {{ item.path }}
+        writable = {{ item.writable }}
+        browsable = {{ item.browsable }}
+        valid users = {{ role_username }}
+        inherit permissions = {{ item.inherit_permissions }}
+        force user = {{ item.force_user }}
+        force group = {{ item.force_group }}
+    prepend_newline: true
+    append_newline: true
+  with_items: "{{ role_smb_shares }}"
+
+
+- name: Ensure smb password is set
+  ansible.builtin.shell: "set -o pipefail && (echo {{ role_smb_password }}; echo {{ role_smb_password }}) | smbpasswd -s -a {{ role_username }}"
+  changed_when: false

@@ -1,0 +1,6 @@
+---
+# handlers file for samba-configure
+- name: Restart smbd
+  ansible.builtin.service:
+    name: smbd
+    state: restarted
