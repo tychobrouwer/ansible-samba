@@ -31,8 +31,8 @@ Example Playbook
             force_group: sambauser
 
       roles:
-         - { role: samba_confgure, samba_password: "password123", samba_username: sambauser }
-         - { role: samba_confgure, samba_password: "password123", samba_username: sambauser,
+         - { role: tychobrouwer.samba, samba_password: "password123", samba_username: sambauser }
+         - { role: tychobrouwer.samba, samba_password: "password123", samba_username: sambauser,
              samba_useruid: 1000, samba_usergid: 1000 }
 ```
 
