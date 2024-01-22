@@ -20,14 +20,14 @@
 
 - name: Ensure samba user group exists
   ansible.builtin.group:
-    name: "{{ samba_user }}"
+    name: "{{ samba_username }}"
     gid: "{{ samba_usergid }}"
     state: present
 
 - name: Ensure samba user exists
   ansible.builtin.user:
-    name: "{{ samba_user }}"
-    group: "{{ samba_user }}"
+    name: "{{ samba_username }}"
+    group: "{{ samba_username }}"
     uid: "{{ samba_useruid }}"
     create_home: false
     shell: /usr/sbin/nologin
@@ -43,6 +43,7 @@
 - name: Ensure smb password is set
   ansible.builtin.shell: >
     set -o pipefail &&
-    (echo {{ samba_password }}; echo {{ samba_password }}) | smbpasswd -s -a {{ samba_user }}
+    (echo {{ samba_password }}; echo {{ samba_password }}) | smbpasswd -s -a {{ samba_username }}
   register: smbpasswd
   changed_when: "'Added user sambauser' in smbpasswd.stdout"
+  notify: Restart smbd

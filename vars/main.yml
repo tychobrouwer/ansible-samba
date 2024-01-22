@@ -1,5 +1,5 @@
 ---
 # vars file for samba-configure
-samba_user: sambauser
+samba_username: sambauser
 samba_useruid: 1000
 samba_usergid: 1000
