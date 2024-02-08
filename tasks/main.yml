@@ -44,7 +44,8 @@
   ansible.builtin.shell: >
     set -o pipefail &&
     (echo {{ samba_password }}; echo {{ samba_password }}) | smbpasswd -s -a {{ samba_username }}
-  executable: /bin/bash
+  args:
+    executable: /bin/bash
   register: smbpasswd
   changed_when: "'Added user sambauser' in smbpasswd.stdout"
   notify: Restart smbd
