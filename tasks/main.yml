@@ -43,7 +43,7 @@
 - name: Ensure smb password is set
   ansible.builtin.shell: >
     set -o pipefail &&
-    (echo "{{ samba_password }}"; echo "{{ samba_password }}") | smbpasswd -s -a "{{ samba_username }}"
+    (echo \"{{ samba_password }}\"; echo \"{{ samba_password }}\") | smbpasswd -s -a {{ samba_username }}
   args:
     executable: /bin/bash
   register: smbpasswd
