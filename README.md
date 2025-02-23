@@ -18,22 +18,27 @@ Example Playbook
 ----------------
 
 ```yaml
-    - hosts: all
-      vars:
-        samba_shares:
-          - name: file_share
-            comment: private file share
-            path: /share/file-share
-            writable: "yes"
-            browsable: "yes"
-            inherit_permissions: "yes"
-            force_user: sambauser
-            force_group: sambauser
+- hosts: all
+  vars:
+    samba_password: password123
+    samba_username: sambauser
 
-      roles:
-         - { role: tychobrouwer.samba, samba_password: "password123", samba_username: sambauser }
-         - { role: tychobrouwer.samba, samba_password: "password123", samba_username: sambauser,
-             samba_useruid: 1000, samba_usergid: 1000 }
+    samba_shares:
+      - name: file_share
+        comment: private file share
+        path: /share/file-share
+        writable: "yes"
+        browsable: "yes"
+        inherit_permissions: "yes"
+        force_user: sambauser
+        force_group: sambauser
+
+  roles:
+    - role: tychobrouwer.samba
+      
+    - role: tychobrouwer.samba
+      samba_useruid: 1000
+      samba_usergid: 1000
 ```
 
 License
