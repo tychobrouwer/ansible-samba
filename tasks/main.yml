@@ -8,12 +8,11 @@
 
 - name: Ensure samba is installed
   ansible.builtin.package:
-    name:
-      - samba
+    name: samba
     state: present
 
 - name: Ensure smbd service is started and enabled
-  ansible.builtin.service:
+  ansible.builtin.systemd:
     name: smbd
     state: started
     enabled: true
@@ -33,7 +32,7 @@
     shell: /usr/sbin/nologin
     state: present
 
-- name: Copy smb config to remote
+- name: Copy smb config to remote if it doesn't exist
   ansible.builtin.template:
     src: smb.conf.j2
     dest: /etc/samba/smb.conf
@@ -47,5 +46,5 @@
   args:
     executable: /bin/bash
   register: smbpasswd
-  changed_when: "'Added user sambauser' in smbpasswd.stdout"
+  changed_when: "'Added user' in smbpasswd.stdout"
   notify: Restart smbd
